@@ -22,4 +22,8 @@ export class User {
       this.email = newEmail.trim().toLowerCase()
       return
     }
+
+    updatePassword(): void {
+      return
+    }
   }
