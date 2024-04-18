@@ -4,12 +4,17 @@ import {InMemoryFootballTeamRepository} from "../../adapters/repositories/inMemo
 import { FootballTeam } from "../../core/entities/FootballTeam";
 import { InMemorySoccerPlayerRepository } from "../../adapters/repositories/inMemorySoccerPlayerRepository";
 import { mapSoccerPlayer } from "./soccerPlayer";
-
+import { CreateFootballTeam } from "../../core/usescases/footballTeam/CreateFootballTeam";
+import { GetFootballTeam } from "../../core/usescases/footballTeam/GetFootballTeam";
+import { DeleteFootballTeam } from "../../core/usescases/footballTeam/DeleteFootballTeam";
 
 export const footballTeamRouter = express.Router();
 const map = new Map <string, FootballTeam>();
 const footballTeamRepository = new InMemoryFootballTeamRepository(map);
 const soccerPlayersRepository = new InMemorySoccerPlayerRepository(mapSoccerPlayer);
+const createFootballTeam = new CreateFootballTeam(footballTeamRepository, soccerPlayersRepository)
+const getFootballTeam = new GetFootballTeam(footballTeamRepository)
+const deletedFootballTeam = new DeleteFootballTeam(footballTeamRepository)
 
 //Ce qui compose un api Rest => verbe / url / statut
 
@@ -17,32 +22,30 @@ footballTeamRouter.post("/football_team/soccerPlayer", async (req: Request, res:
     try{
     const id = v4();
     const body = req.body;
-    // récupérer un tableau de soccerPlayer ID dans le body
     const {name, manager, soccerPlayersIds} = body;
 
-    // récup dans la map les soccersPlayerById
-    const soccerPlayers = await soccerPlayersRepository.getByIds(soccerPlayersIds);
-
-    const footballTeam = FootballTeam.create({
+    const footballTeam = await createFootballTeam.execute({
+        id: id,
         name: name,
         manager: manager,
-        soccerPlayers: soccerPlayers // donner les soccerPlayer récupérer 
+        soccerPlayersIds: soccerPlayersIds
     })
 
-    footballTeamRepository.save(footballTeam)
     return res.status(201).send(footballTeam.props)
 } catch(error){
 if(error instanceof Error){
     return res.status(400).send(error.message)
 }}})
 
-footballTeamRouter.get("/football_team/:id", (req: Request, res: Response) =>{
+footballTeamRouter.get("/football_team/:id", async (req: Request, res: Response) =>{
     try{
     const id = req.params.id
 
-    const footballTeam = footballTeamRepository.getById(id)
+    const footballTeam = await getFootballTeam.execute({
+        id: id
+    })
 
-    return res.status(200).send(footballTeam)
+    return res.status(200).send(footballTeam.props)
 } catch(error: any){
     return res.status(400).send(error.message)
 }})
@@ -52,24 +55,21 @@ footballTeamRouter.delete("/football_team/:id/soccerPlayer/:soccerPlayerId", (re
     const id = req.params.id
     const playerToDeleteId = req.params.soccerPlayerId
 
-    const footballTeam = footballTeamRepository.getById(id)
+    deletedFootballTeam.execute({
+        footballTeamId: id,
+        playerId: playerToDeleteId
+    })
 
-    // enleve l'id du joueur .filter
-    const footballTeamUpdated = footballTeam.deletePlayer(playerToDeleteId)
-
-    // save par dessus
-    footballTeamRepository.save(footballTeamUpdated)
-    
     const result = {
-        result: "Joueur supprimé",
-        footballTeam: footballTeamUpdated.props
+        playerIdDeleted : `This player with id :${playerToDeleteId} is deleted`
     }
+
     return res.status(200).send(result)
 }catch(error: any){
     return res.status(400).send(error.message)
 }})
 
-footballTeamRouter.patch("/football_team/:id/manager", (req: Request, res: Response)=> {
+/*footballTeamRouter.patch("/football_team/:id/manager", (req: Request, res: Response)=> {
     try{
     const id = req.params.id
     const body = req.body
@@ -117,4 +117,4 @@ footballTeamRouter.get("/football_team/:id/selectPlayerStriker", (req: Request, 
 
 }catch(error: any){
     return res.status(400).send(error.message)
-}})
+}})*/

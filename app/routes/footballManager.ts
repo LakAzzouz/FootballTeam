@@ -9,7 +9,7 @@ export const footballManagerRouter = express.Router()
 const map = new Map<string, FootballManager>() 
 const managerRepository = new InMemoryFootballManagertRepository(map)
 
-footballManagerRouter.post("/football_manager", (req: Request, res: Response) => {
+/*footballManagerRouter.post("/football_manager", (req: Request, res: Response) => {
     try{
     const id = v4();
     const body = req.body;
@@ -65,4 +65,4 @@ footballManagerRouter.delete("/football_manager/:id", (req: Request, res: Respon
     return res.status(200).send(deleteResult)
 }   catch (error){
     return res.status(400).send(error)
-}})
+}})*/

@@ -6,13 +6,19 @@ export enum Position{
     GOALKEEPER = "goalkeeper"
 }
 
+export enum Nationality {
+    FRA = "Français",
+    ENG = "Anglais",
+    POR = "Portugais"
+}
+
 type SoccerPlayerProperties = {
     id: string
     name: string
     age: number
-    nationality: string
+    nationality: Nationality
     club: string
-    goodOrNot: boolean,
+    goodOrNot: string,
     position: Position
 }
 
@@ -22,7 +28,7 @@ export class SoccerPlayer {
         this.props = soccerPlayerProperties
     }
 
-    static create(props: {name: string, age: number, nationality: string, club: string, goodOrNot: boolean, position: Position}): SoccerPlayer{
+    static create(props: {name: string, age: number, nationality: Nationality, club: string, goodOrNot: string, position: Position}): SoccerPlayer{
         const soccerPlayer = new SoccerPlayer({
             id: v4(),
             name: props.name,
@@ -35,7 +41,7 @@ export class SoccerPlayer {
         return soccerPlayer
     }
 
-    updateProfile(newName: string, newAge:number, newNationality: string, newClub: string, goodOrNot: boolean, position: Position): SoccerPlayer{
+    updateProfile(newName: string, newAge:number, newNationality: Nationality, newClub: string, goodOrNot: string, position: Position): SoccerPlayer{
         this.props.name = newName,
         this.props.age = newAge,
         this.props.nationality = newNationality,

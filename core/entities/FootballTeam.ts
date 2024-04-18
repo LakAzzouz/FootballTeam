@@ -1,6 +1,11 @@
 import {v4} from "uuid"
 import { Position, SoccerPlayer } from "./SoccerPlayer"
 
+export enum Manager{
+    MANAGER1 = "Guariola",
+    MANAGER2 = "Enrique"
+}
+
 type FootballTeamProperties = {
     id: string
     name: string
@@ -30,7 +35,7 @@ export class FootballTeam {
         return footballTeam
     }
 
-    updateManager(newManager: string): FootballTeam{
+    updateManager(newManager: Manager): FootballTeam{
         this.props.manager = newManager
         return this
     }
