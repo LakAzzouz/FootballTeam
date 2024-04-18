@@ -24,7 +24,6 @@ const updateUser = new UpdateUser(userRepository)
 const deleteUser = new DeleteUser(userRepository)
 const getUser = new GetUsers(userRepository)
 
-
 router.post("/signup", async (req: Request, res: Response) => {
     try{
         const id = v4();
@@ -97,9 +96,13 @@ router.delete("/delete/:id", async (req: Request, res: Response) => {
     try{
         const id = req.params.id;
 
-        const result = await deleteUser.execute({
+        const user = await deleteUser.execute({
             id: id
         })
+
+        const result = {
+            message: `User with id:'${user.id}' deleted`
+        }
 
         return res.status(200).send(result)
     }catch(error){
@@ -111,9 +114,14 @@ router.get("/users/:id", async (req: Request, res: Response) => {
     try{
         const id = req.params.id;
  
-        const result = await getUser.execute({
+        const user = await getUser.execute({
             id: id,
         })
+
+        const result = {
+            id: user.id,
+            email: user.email
+        }
 
         return res.status(200).send(result)
 }catch(error){

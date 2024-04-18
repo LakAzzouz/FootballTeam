@@ -6,7 +6,8 @@ import {soccerPlayerRouter} from './app/routes/soccerPlayer';
 import {footballTeamRouter} from './app/routes/footballTeam';
 
 const app = express();
-const port = Number(process.env.PORT);
+//const port = Number(process.env.PORT);
+const port = 3005
 
 app.use(express.json());
 

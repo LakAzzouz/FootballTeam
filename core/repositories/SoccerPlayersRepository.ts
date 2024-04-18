@@ -8,5 +8,4 @@ export interface SoccerPlayerRepository {
     deleteById(id: string): Promise<void>
        
     getByIds(ids: string[]): Promise<SoccerPlayer[]>
-
 }

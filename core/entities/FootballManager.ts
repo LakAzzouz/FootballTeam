@@ -1,3 +1,5 @@
+import { Manager } from "../valueObjects/Manager"
+
 export class FootballManager {
     id: string
     name: string
@@ -16,7 +18,7 @@ export class FootballManager {
     static create(id: string, name: string, age: number, birthDay: Date, nationality: string): FootballManager{
         const footballManager = new FootballManager(
             id,
-            name,
+            Manager.pepOrLuis(name),
             age,
             birthDay,
             nationality

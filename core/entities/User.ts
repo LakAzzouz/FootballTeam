@@ -1,3 +1,5 @@
+import { Password } from "../valueObjects/Password";
+
 export class User {
     id: string;
     password: string;

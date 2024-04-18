@@ -1,20 +1,19 @@
-import {v4} from "uuid"
 import { FootballTeam } from "../../core/entities/FootballTeam"
-import { soccerPlayerRouter } from "../../app/routes/soccerPlayer"
+import { FootballTeamRepository } from "../../core/repositories/FootballTeamRepository"
 
-export class InMemoryFootballTeamRepository {
+export class InMemoryFootballTeamRepository implements FootballTeamRepository{
     map: Map<String, FootballTeam>
 
     constructor(map: Map<string, FootballTeam>) {
         this.map = map
     }
 
-    save(footballTeam: FootballTeam): FootballTeam{
-        this.map.set(footballTeam.props.id, footballTeam)
+    async save(footballTeam: FootballTeam): Promise<FootballTeam>{
+        await this.map.set(footballTeam.props.id, footballTeam)
         return footballTeam
     }
 
-    getById(id: string): FootballTeam{
+    async getById(id: string): Promise<FootballTeam>{
         const footballTeam = this.map.get(id)
         if(!footballTeam){
             throw new Error("footballTeam not found !")
@@ -22,7 +21,7 @@ export class InMemoryFootballTeamRepository {
         return footballTeam
     }
 
-    deletedById(id: string) {
+    async deletedById(id: string) {
         this.map.delete(id)
         return
     }

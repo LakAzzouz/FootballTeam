@@ -15,7 +15,7 @@ export class SignIn implements Usecases<SignInInput, Promise<User>> {
     ) {}
     
     async execute(input: SignInInput): Promise<User> {
-        const user = await this.userRepository.getByEmail(input.email)
+        const user = await this.userRepository.getByEmail(input.email.trim().toLowerCase())
 
         const isMatching = this.passwordGateway.compare(input.password, user.password)
         if(!isMatching){
